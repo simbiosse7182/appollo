@@ -2,17 +2,54 @@
 ### Do not make changes to this file directly
 
 
+type Chat {
+  id: Int!
+  messages(after: MessageWhereUniqueInput, before: MessageWhereUniqueInput, first: Int, last: Int): [Message!]!
+  users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+}
+
+input ChatWhereUniqueInput {
+  id: Int
+  key: String
+}
+
+type Message {
+  author: User!
+  authorId: Int!
+  chat: Chat!
+  chatId: Int!
+  id: Int!
+  text: String!
+}
+
+input MessageWhereUniqueInput {
+  id: Int
+}
+
 type Mutation {
   """register new user"""
   registration(login: String!, name: String!, password: String!): String
+
+  """send new message"""
+  sendMessage(text: String!, to: String!): Message
 }
 
 type Query {
+  """authorize user"""
+  authorization(login: String!, password: String!): String
+
+  """get account info"""
   me: User
 }
 
 type User {
+  chats(after: ChatWhereUniqueInput, before: ChatWhereUniqueInput, first: Int, last: Int): [Chat!]!
+  id: Int!
+  login: String!
+  name: String!
+}
+
+input UserWhereUniqueInput {
   id: Int
   login: String
-  name: String
 }

@@ -1,15 +1,24 @@
-import { PrismaClient } from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {verifyJWT} from "../utils/index.js";
 
+const prisma = new PrismaClient()
+
 export interface Context {
-    db: PrismaClient
+    prisma: PrismaClient
     userId: number | null
 }
 
-const context = ({req}) : Context=> {
+const context = async ({req}): Promise<Context> => {
     const token = req.headers.authentication || '';
-    const userId = verifyJWT(token)?.userId || null
-    return ({db: new PrismaClient(), userId})
+    let userId = verifyJWT(token)?.userId || null
+    if(userId){
+        const user = await prisma.user.findOne({where:{id:userId}})
+        if(!user){
+            userId = null
+        }
+    }
+
+    return ({prisma: prisma, userId})
 }
 
 export default context

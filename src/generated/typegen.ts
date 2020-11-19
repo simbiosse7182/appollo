@@ -7,13 +7,29 @@ import * as ContextModule from "../config/context"
 
 
 
-
+declare global {
+  interface NexusGenCustomOutputProperties<TypeName extends string> {
+    model: NexusPrisma<TypeName, 'model'>
+    crud: any
+  }
+}
 
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
+  ChatWhereUniqueInput: { // input type
+    id?: number | null; // Int
+    key?: string | null; // String
+  }
+  MessageWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
+  UserWhereUniqueInput: { // input type
+    id?: number | null; // Int
+    login?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
@@ -28,16 +44,28 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenRootTypes {
+  Chat: { // root type
+    id: number; // Int!
+  }
+  Message: { // root type
+    authorId: number; // Int!
+    chatId: number; // Int!
+    id: number; // Int!
+    text: string; // String!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
-    id?: number | null; // Int
-    login?: string | null; // String
-    name?: string | null; // String
+    id: number; // Int!
+    login: string; // String!
+    name: string; // String!
   }
 }
 
 export interface NexusGenAllTypes extends NexusGenRootTypes {
+  ChatWhereUniqueInput: NexusGenInputs['ChatWhereUniqueInput'];
+  MessageWhereUniqueInput: NexusGenInputs['MessageWhereUniqueInput'];
+  UserWhereUniqueInput: NexusGenInputs['UserWhereUniqueInput'];
   String: NexusGenScalars['String'];
   Int: NexusGenScalars['Int'];
   Float: NexusGenScalars['Float'];
@@ -46,27 +74,59 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
 }
 
 export interface NexusGenFieldTypes {
+  Chat: { // field return type
+    id: number; // Int!
+    messages: NexusGenRootTypes['Message'][]; // [Message!]!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  Message: { // field return type
+    author: NexusGenRootTypes['User']; // User!
+    authorId: number; // Int!
+    chat: NexusGenRootTypes['Chat']; // Chat!
+    chatId: number; // Int!
+    id: number; // Int!
+    text: string; // String!
+  }
   Mutation: { // field return type
     registration: string | null; // String
+    sendMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   Query: { // field return type
+    authorization: string | null; // String
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
-    id: number | null; // Int
-    login: string | null; // String
-    name: string | null; // String
+    chats: NexusGenRootTypes['Chat'][]; // [Chat!]!
+    id: number; // Int!
+    login: string; // String!
+    name: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Chat: { // field return type name
+    id: 'Int'
+    messages: 'Message'
+    users: 'User'
+  }
+  Message: { // field return type name
+    author: 'User'
+    authorId: 'Int'
+    chat: 'Chat'
+    chatId: 'Int'
+    id: 'Int'
+    text: 'String'
+  }
   Mutation: { // field return type name
     registration: 'String'
+    sendMessage: 'Message'
   }
   Query: { // field return type name
+    authorization: 'String'
     me: 'User'
   }
   User: { // field return type name
+    chats: 'Chat'
     id: 'Int'
     login: 'String'
     name: 'String'
@@ -74,11 +134,43 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Chat: {
+    messages: { // args
+      after?: NexusGenInputs['MessageWhereUniqueInput'] | null; // MessageWhereUniqueInput
+      before?: NexusGenInputs['MessageWhereUniqueInput'] | null; // MessageWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+    users: { // args
+      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
   Mutation: {
     registration: { // args
       login: string; // String!
       name: string; // String!
       password: string; // String!
+    }
+    sendMessage: { // args
+      text: string; // String!
+      to: string; // String!
+    }
+  }
+  Query: {
+    authorization: { // args
+      login: string; // String!
+      password: string; // String!
+    }
+  }
+  User: {
+    chats: { // args
+      after?: NexusGenInputs['ChatWhereUniqueInput'] | null; // ChatWhereUniqueInput
+      before?: NexusGenInputs['ChatWhereUniqueInput'] | null; // ChatWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
     }
   }
 }
@@ -88,9 +180,9 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Mutation" | "Query" | "User";
+export type NexusGenObjectNames = "Chat" | "Message" | "Mutation" | "Query" | "User";
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = "ChatWhereUniqueInput" | "MessageWhereUniqueInput" | "UserWhereUniqueInput";
 
 export type NexusGenEnumNames = never;
 

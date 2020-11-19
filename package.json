@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node --transpile-only' src/index.ts",
+    "test": "nodemon --watch '__tests__/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node  --transpile-only' __tests__/index.ts",
     "generate": "ts-node api/schema.ts",
-    "test": "npm run generate && jest"
+    "testt": "npm run generate && jest"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
     "jsonwebtoken": "^8.5.1",
+    "nexus-plugin-prisma": "^0.24.0",
     "path": "^0.12.7",
     "yup": "^0.29.3"
   },
@@ -46,5 +48,8 @@
       }
     },
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   }
 }

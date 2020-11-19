@@ -2,6 +2,7 @@ import {mutationField, stringArg} from "@nexus/schema";
 import {UserInputError} from 'apollo-server'
 import {generateJWT} from "../../utils/index.js";
 import {registrationValidationSchema} from "../../validation";
+import {CREATE_USER} from "../../prisma/actions";
 
 export const registration = mutationField("registration", {
     type: "String",
@@ -15,23 +16,18 @@ export const registration = mutationField("registration", {
     resolve: async (root, args, context): Promise<any> => {
         try {
             await registrationValidationSchema(args)
-        }catch (e) {
+        } catch (e) {
             return new UserInputError(e.message, e.errors)
         }
 
-        const user = await context.db.user.findOne({
-            where : {login:args.login}
-        })
-        if(user) return new UserInputError('this login is already taken')
+        try {
+            const {prisma} = context
+            const user = await CREATE_USER(prisma, args)
+            return generateJWT(user.id)
+        } catch (e) {
+            return new UserInputError('this login is already taken')
+        }
 
-        const newUser = await context.db.user.create({
-            data: {
-                login: args.login,
-                name: args.name,
-                password: args.password
-            }
-        })
 
-        return generateJWT(newUser.id)
     }
 })
