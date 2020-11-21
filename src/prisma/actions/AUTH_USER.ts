@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {comparePassword, generateJWT} from "../../utils/index.js";
+import {comparePasswords, generateJWT} from "../../utils";
 
 type Data = {
     login: string,
@@ -11,7 +11,7 @@ export const AUTH_USER = async (prisma: PrismaClient, data: Data): Promise< stri
     const user = await prisma.user.findOne({where: {login}})
     if (!user) return false
 
-    const compared = await comparePassword(password, user.password)
+    const compared = await comparePasswords(password, user.password)
 
     if (!compared) return false
 

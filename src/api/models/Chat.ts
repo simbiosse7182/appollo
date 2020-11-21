@@ -1,10 +1,16 @@
-import { objectType } from '@nexus/schema'
+import {objectType} from '@nexus/schema'
 
 export const Chat = objectType({
-    name : "Chat",
+    name: "Chat",
     definition(t) {
-        t.model.id()
-        t.model.users()
-        t.model.messages()
+        t.int('id')
+        t.list.field('users', {
+            type: "User",
+            nullable: true
+        })
+        t.list.field('messages', {
+            type: "Message",
+            nullable: true
+        })
     }
 })

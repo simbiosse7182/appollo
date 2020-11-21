@@ -1,7 +1,8 @@
 import {mutationField, stringArg} from "@nexus/schema";
 import {messageTextValidationSchema} from "../../validation";
-import {ForbiddenError, UserInputError} from "apollo-server";
+import {UserInputError} from "apollo-server";
 import {SEND_MESSAGE} from "../../prisma/actions";
+import {authorize} from "../../utils";
 
 export const sendMessage = mutationField("sendMessage", {
     type: "Message",
@@ -11,9 +12,9 @@ export const sendMessage = mutationField("sendMessage", {
         to: stringArg({required: true}),
         text: stringArg({required: true}),
     },
+    authorize,
     resolve: async (root, args, context): Promise<any> => {
         const {prisma, userId} = context
-        if (!userId) return new ForbiddenError('Not logged')
 
         args.text = args.text.replace(/\s+/g, ' ').trim()
 
@@ -26,6 +27,7 @@ export const sendMessage = mutationField("sendMessage", {
         }
 
         try {
+            // @ts-ignore
             const result = await SEND_MESSAGE(prisma, {from: userId, to, text})
             console.log(result)
             return result

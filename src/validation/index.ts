@@ -1,4 +1,4 @@
-import validationErrorFormatter from "../utils/validationErrorFormatter";
+import {validationErrorFormatter} from "../utils";
 import {registrationSchema} from "./registration";
 import {messageTextSchema} from "./messageTextSchema";
 

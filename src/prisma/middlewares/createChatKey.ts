@@ -1,4 +1,4 @@
-import {generateChatKey} from "../../utils/index.js";
+import {generateChatKey} from "../../utils";
 
 export const createChatKey = async (params, next) => {
     if (params.model === "Chat" && params.action === "create") {

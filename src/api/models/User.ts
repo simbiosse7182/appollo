@@ -1,11 +1,11 @@
-import { objectType } from '@nexus/schema'
+import {objectType} from '@nexus/schema'
 
 export const User = objectType({
-    name : "User",
+    name: "User",
     definition(t) {
-        t.model.id()
-        t.model.login()
-        t.model.name()
-        t.model.chats()
+        t.int('id')
+        t.string('login')
+        t.string('name')
+        t.list.field('chats', {type: 'Chat', nullable: true})
     }
 })

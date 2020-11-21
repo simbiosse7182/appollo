@@ -1,13 +1,13 @@
-import { objectType } from '@nexus/schema'
+import {objectType} from '@nexus/schema'
 
 export const Message = objectType({
-    name : "Message",
+    name: "Message",
     definition(t) {
-        t.model.id()
-        t.model.text()
-        t.model.author()
-        t.model.authorId()
-        t.model.chat()
-        t.model.chatId()
+        t.int('id')
+        t.string('text')
+        t.int('authorId')
+        t.int('chatId')
+        t.field('author', {type: "User", nullable: true})
+        t.field('chat', {type: "Chat", nullable: true})
     }
 })

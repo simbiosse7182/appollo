@@ -1,6 +1,6 @@
 import {ObjectSchema} from 'yup'
 
-const validationErrorFormatter = (validationSchema: ObjectSchema) => {
+export const validationErrorFormatter = (validationSchema: ObjectSchema) => {
     return (obj) => {
         return validationSchema.validate(obj, {abortEarly: false})
             .catch(e => {
@@ -8,9 +8,7 @@ const validationErrorFormatter = (validationSchema: ObjectSchema) => {
                 e.inner.forEach(el => {
                     errors[el.path] = el.errors
                 })
-                throw {message:'validation error', errors}
+                throw {message: 'validation error', errors}
             })
     }
 }
-
-export default validationErrorFormatter

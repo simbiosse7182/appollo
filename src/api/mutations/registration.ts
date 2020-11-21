@@ -1,6 +1,6 @@
 import {mutationField, stringArg} from "@nexus/schema";
 import {UserInputError} from 'apollo-server'
-import {generateJWT} from "../../utils/index.js";
+import {generateJWT} from "../../utils";
 import {registrationValidationSchema} from "../../validation";
 import {CREATE_USER} from "../../prisma/actions";
 
