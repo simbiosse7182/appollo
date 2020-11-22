@@ -1,0 +1,1 @@
+export const decodeChatKey = (key: string): number[] => key.split("~").map(el => parseInt(el))

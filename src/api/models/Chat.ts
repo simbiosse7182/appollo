@@ -4,6 +4,8 @@ export const Chat = objectType({
     name: "Chat",
     definition(t) {
         t.int('id')
+        t.int('lastMessageId')
+        t.date('updatedAt')
         t.list.field('users', {
             type: "User",
             nullable: true
@@ -12,5 +14,10 @@ export const Chat = objectType({
             type: "Message",
             nullable: true
         })
+        t.field('lastMessage', {
+            type: "Message",
+            nullable: true
+        })
+        t.int('unreadMessagesCount', {nullable: true})
     }
 })

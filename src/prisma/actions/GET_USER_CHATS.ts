@@ -1,14 +1,18 @@
-import {PrismaClient} from "@prisma/client";
+import {Context} from "../../config/context";
+import {calculateCountUnreadMessages} from "../../utils";
 
-export const GET_USER_CHATS = async (prisma: PrismaClient, id: number): Promise<any> => {
-    const userWithChats = await prisma.user.findOne({
-        where: {id},
+export const GET_USER_CHATS = async (context: Context): Promise<any> => {
+    const {prisma, userId} = context
+    if (!userId) return []
+    const user = await prisma.user.findOne({
+        where: {id: userId},
         select: {
             chats: {
                 orderBy: {
-                    id: 'desc'
+                    updatedAt: 'desc'
                 },
                 select: {
+                    id: true,
                     users: {
                         select: {
                             login: true,
@@ -17,24 +21,25 @@ export const GET_USER_CHATS = async (prisma: PrismaClient, id: number): Promise<
                         },
                         where: {
                             id: {
-                                not: id
+                                not: userId
                             }
                         }
                     },
-                    id: true,
+                    lastMessage: true,
                     messages: {
-                        orderBy: {
-                            id: 'desc'
+                        where: {
+                            authorId: {not: userId},
+                            readed: false,
                         },
-                        take: 1,
-                        select: {
-                            text: true,
-                            authorId: true
-                        }
                     }
                 },
             }
         }
     })
-    return userWithChats?.chats || []
+    //prisma cant count messages yet.
+    if (user?.chats) {
+        const {chats} = user
+        return calculateCountUnreadMessages(chats)
+    }
+    return []
 }

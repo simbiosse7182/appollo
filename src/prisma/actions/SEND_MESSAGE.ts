@@ -17,7 +17,7 @@ export const SEND_MESSAGE = async (prisma: PrismaClient, data: Data): Promise<an
         {id: user.id}
     ]
     const key = generateChatKey([from, user.id])
-    return await prisma.message.create({
+    const message = await prisma.message.create({
         data: {
             text: text,
             author: {
@@ -38,6 +38,14 @@ export const SEND_MESSAGE = async (prisma: PrismaClient, data: Data): Promise<an
                     }
                 }
             }
+        },
+    })
+    const {chatId} = message
+    await prisma.chat.update({
+        where: {id: chatId},
+        data: {
+            updatedAt: new Date(), lastMessage: {connect: {id: message.id}}
         }
     })
+    return message
 }

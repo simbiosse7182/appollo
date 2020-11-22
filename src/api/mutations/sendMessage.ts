@@ -28,9 +28,7 @@ export const sendMessage = mutationField("sendMessage", {
 
         try {
             // @ts-ignore
-            const result = await SEND_MESSAGE(prisma, {from: userId, to, text})
-            console.log(result)
-            return result
+            return await SEND_MESSAGE(prisma, {from: userId, to, text})
         } catch (e) {
             return new UserInputError(e)
         }

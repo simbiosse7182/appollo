@@ -19,17 +19,25 @@ chats       Chat[]
 model Chat {
 id          Int @id @default(autoincrement())
 createdAt   DateTime @default(now())
+updatedAt   DateTime @updatedAt
 users       User[]
-messages    Message[]
+messages    Message[] @relation("Messages")
+lastMessage Message? @relation(name:"Last_Message",fields:[lastMessageId], references:[id], name)
+lastMessageId Int?
 key         String @unique
 }
 
 model Message {
 id          Int @id @default(autoincrement())
 createdAt   DateTime @default(now())
+updatedAt   DateTime @default(now())
 author      User @relation(fields: [authorId], references: [id])
 authorId    Int
-chat        Chat @relation(fields: [chatId], references: [id])
+chat        Chat @relation("Messages",fields: [chatId], references: [id])
 chatId      Int
+lastIn      Chat?  @relation("Last_Message",fields: [lastInId], references: [id])
+lastInId    Int?
 text        String
+readed      Boolean @default(false)
+@@index(fields:[chatId, readed])
 }
